@@ -20,17 +20,13 @@ jobs:
       run: npm install
     - name: Run build task
       run: npm run build
-    
-    - name: Sync
+    - name: Deploy to Server
+      uses: easingthemes/ssh-deploy@main
       env:
-        dest: 'root@123.60.69.41:/root/demo/public'
-      run: |
-        echo "${{secrets.ERVER_SSH_KEY}}" > KeyPair-a76a
-        chmod 700 ./KeyPair-a76a.pem
-        rsync -chav --delete \
-          -e 'ssh -i ./KeyPair-a76a.pem -o StrictHostKeyChecking=no' \
-          --exclude /deploy_key.pem \
-          --exclude /.git/ \
-          --exclude /.github/ \
-          --exclude /node_modules/ \
-          ./ ${{env.dest}}
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          ARGS: '-rltgoDzvO --delete'
+          SOURCE: build # 这是要复制到华为云静态服务器的文件夹名称
+          REMOTE_HOST: '123.60.69.41' # 你的华为云公网地址
+          REMOTE_USER: root # 华为登录后默认为 root 用户，并且所在文件夹为 root
+          REMOTE_PASSWORD: 19k34yHwy@
+          TARGET: /root/demo/public # 打包后的 dist 文件夹将放在 /root/node-server
