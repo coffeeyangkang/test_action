@@ -27,3 +27,4 @@ jobs:
           BRANCH: master
           FOLDER: build
           REPOSITORY_NAME: coffeeyangkang/test_action # 这是我的 github page 仓库
+          TARGET_FOLDER: ithub-actions-demo
